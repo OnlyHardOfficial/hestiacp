@@ -44,12 +44,14 @@ if [ -e "/etc/os-release" ]; then
         if [ -e '/usr/bin/lsb_release' ]; then
             release="$(lsb_release -s -r)"
             VERSION='ubuntu'
+            echo "[ * ] Install apt-get update && apt-get install -y lsb-release && apt-get clean all"
             apt-get update && apt-get install -y lsb-release && apt-get clean all
         else
-        apt-get update && apt-get install -y lsb-release && apt-get clean all
-            #echo "lsb_release is currently not installed, please install it:"
-            #echo "apt-get update && apt-get install -y lsb-release && apt-get clean all"
-            #exit 1
+            echo "[ * ] else - ?????"
+            apt-get update && apt-get install -y lsb-release && apt-get clean all
+            echo "lsb_release is currently not installed, please install it:"
+            echo "apt-get update && apt-get install -y lsb-release && apt-get clean all"
+            exit 1
         fi
     elif [ "$type" = "debian" ]; then
         release=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
@@ -108,4 +110,4 @@ else
     no_support_message
 fi
 
-#exit
+exit
