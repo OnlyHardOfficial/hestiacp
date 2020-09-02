@@ -900,8 +900,8 @@ fi
 # Restart SSH daemon
 echo "[ * ] Restart SSH daemon"
 /etc/init.d/ssh status && sudo service ssh status && service ssh stop && service ssh restart
-echo "[ * ] systemctl restart ssh - Incompatvel"
-systemctl restart ssh
+echo "[ * ] systemctl restart ssh - incompatible"
+# systemctl restart ssh
 
 # Disable AWStats cron
 echo "[ * ] rm -f /etc/cron.d/awstats"
@@ -921,7 +921,9 @@ fi
 sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
 echo "[ * ] systemctl enable systemd-timesyncd"
 systemctl enable systemd-timesyncd
-echo "[ * ] systemctl start systemd-timesyncd"
+echo "[ * ] apt-get install ntp -y && sntp --version && sudo service ntp restart && sudo service ntp status"
+apt-get install ntp -y && sntp --version && sudo service ntp restart && sudo service ntp status
+echo "[ * ] "systemctl start systemd-timesyncd" - incompatible"
 systemctl start systemd-timesyncd
 
 # Setup rssh
