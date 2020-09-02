@@ -924,7 +924,7 @@ systemctl enable systemd-timesyncd
 echo "[ * ] apt-get install ntp -y && sntp --version && sudo service ntp restart && sudo service ntp status"
 apt-get install ntp -y && sntp --version && sudo service ntp restart && sudo service ntp status
 echo "[ * ] "systemctl start systemd-timesyncd" - incompatible"
-systemctl start systemd-timesyncd
+#systemctl start systemd-timesyncd
 
 # Setup rssh
 if [ "$release" != '20.04' ]; then
@@ -1261,7 +1261,10 @@ if [ "$apache" = 'yes' ]; then
     sed -i '/Allow from all/d' /etc/apache2/mods-available/hestia-status.conf
 
     update-rc.d apache2 defaults > /dev/null 2>&1
-    systemctl start apache2 >> $LOG
+    echo "[ * ] systemctl start apache2 >> $LOG - incompatible"
+    service apache2 restart >> $LOG
+    echo "[ * ] service apache2 status - testing porposes"
+    service apache2 status
     check_result $? "apache2 start failed"
 else
     update-rc.d apache2 disable > /dev/null 2>&1
@@ -1343,7 +1346,8 @@ if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
     update-rc.d proftpd defaults > /dev/null 2>&1
-    systemctl start proftpd >> $LOG
+    echo "[ * ] service proftpd restart - testing porposes"
+    service proftpd restart >> $LOG
     check_result $? "proftpd start failed"
 fi
 
