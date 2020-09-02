@@ -898,7 +898,9 @@ if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
 fi
 
 # Restart SSH daemon
-echo "[ * ] systemctl restart ssh"
+echo "[ * ] Restart SSH daemon"
+/etc/init.d/ssh status && sudo service ssh status && service ssh stop && service ssh restart
+echo "[ * ] systemctl restart ssh - Incompatvel"
 systemctl restart ssh
 
 # Disable AWStats cron
