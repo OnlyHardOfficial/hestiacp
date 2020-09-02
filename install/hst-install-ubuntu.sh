@@ -284,8 +284,8 @@ echo
 
 # Update apt repository
 apt-get -qq update
-clear
 apt-get update && apt-get install -y --no-install-recommends apt-utils
+clear
 
 # Creating backup directory
 mkdir -p $hst_backups
