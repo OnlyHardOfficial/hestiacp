@@ -45,7 +45,7 @@ if [ -e "/etc/os-release" ]; then
             VERSION='ubuntu'            
         else
             echo "lsb_release is currently not installed, please install it:"
-            echo "apt-get update && apt-get install lsb_release"
+            echo "apt-get update && apt-get install -y lsb-release && apt-get clean all"
             exit 1
         fi
     elif [ "$type" = "debian" ]; then
