@@ -20,7 +20,7 @@ os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
-VERBOSE='no'
+VERBOSE='yes'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.3.0~alpha'
