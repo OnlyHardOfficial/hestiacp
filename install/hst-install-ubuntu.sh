@@ -1291,7 +1291,7 @@ if [ "$phpfpm" = 'yes' ]; then >> $LOG
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 >> $LOG
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf >> $LOG
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 >> $LOG
-    service php7.3-fpm resforce-reload >> $LOG
+    service php7.3-fpm force-reload >> $LOG
     check_result $? "php-fpm start failed" >> $LOG
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1 >> $LOG
 fi                                                                                                                              >> $LOG
