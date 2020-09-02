@@ -36,6 +36,7 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ -z "$1" ]; then
 fi
 
 # Detect OS
+echo "[ * ] Detect OS"
 if [ -e "/etc/os-release" ]; then
     type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
     if [ "$type" = "ubuntu" ]; then
@@ -45,7 +46,7 @@ if [ -e "/etc/os-release" ]; then
             VERSION='ubuntu'
             apt-get update && apt-get install -y lsb-release && apt-get clean all
         else
-        #apt-get update && apt-get install -y lsb-release && apt-get clean all
+        apt-get update && apt-get install -y lsb-release && apt-get clean all
             #echo "lsb_release is currently not installed, please install it:"
             #echo "apt-get update && apt-get install -y lsb-release && apt-get clean all"
             #exit 1
