@@ -44,10 +44,10 @@ if [ -e "/etc/os-release" ]; then
             release="$(lsb_release -s -r)"
             VERSION='ubuntu'            
         else
-            runlsb_release
-            #echo "lsb_release is currently not installed, please install it:"
-            #echo "apt-get update && apt-get install -y lsb-release && apt-get clean all"
-            #exit 1
+            #runlsb_release
+            echo "lsb_release is currently not installed, please install it:"
+            echo "apt-get update && apt-get install -y lsb-release && apt-get clean all"
+            exit 1
         fi
     elif [ "$type" = "debian" ]; then
         release=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
