@@ -1322,18 +1322,21 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 #                    Configure Vsftpd                      #
 #----------------------------------------------------------#
 
-if [ "$vsftpd" = 'yes' ]; then
-    echo "[ * ] Configuring Vsftpd server..."
-    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
-    touch /var/log/vsftpd.log
-    chown root:adm /var/log/vsftpd.log
-    chmod 640 /var/log/vsftpd.log
-    touch /var/log/xferlog
-    chown root:adm /var/log/xferlog
-    chmod 640 /var/log/xferlog
-    update-rc.d vsftpd defaults
-    systemctl start vsftpd >> $LOG
-    check_result $? "vsftpd start failed"
+if [ "$vsftpd" = 'yes' ]; then >> $LOG
+    echo "[ * ] Configuring Vsftpd server..." 
+    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/ >> $LOG
+    touch /var/log/vsftpd.log >> $LOG 
+    chown root:adm /var/log/vsftpd.log >> $LOG
+    chmod 640 /var/log/vsftpd.log >> $LOG
+    touch /var/log/xferlog >> $LOG
+    chown root:adm /var/log/xferlog >> $LOG
+    chmod 640 /var/log/xferlog >> $LOG
+    update-rc.d vsftpd defaults >> $LOG
+    echo "[ * ] Vsftpd server restart"
+    service vsftpd restart >> $LOG
+    echo "[ * ] Check Vsftpd service STATUS"
+    service vsftpd status
+    check_result $? "vsftpd start failed" >> $LOG
 
 fi
 
@@ -1342,14 +1345,14 @@ fi
 #                    Configure ProFTPD                     #
 #----------------------------------------------------------#
 
-if [ "$proftpd" = 'yes' ]; then
+if [ "$proftpd" = 'yes' ]; then  >> $LOG
     echo "[ * ] Configuring ProFTPD server..."
-    echo "127.0.0.1 $servername" >> /etc/hosts
-    cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
-    update-rc.d proftpd defaults > /dev/null 2>&1
+    echo "127.0.0.1 $servername" >> /etc/hosts  >> $LOG
+    cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/  >> $LOG
+    update-rc.d proftpd defaults > /dev/null 2>&1  >> $LOG
     echo "[ * ] service proftpd restart - testing porposes"
     service proftpd restart >> $LOG
-    check_result $? "proftpd start failed"
+    check_result $? "proftpd start failed"  >> $LOG
 fi
 
 
@@ -1368,25 +1371,25 @@ if [ "$mysql" = 'yes' ]; then
     fi
 
     # Configuring MariaDB
-    cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
+    cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf  >> $LOG
     mysql_install_db >> $LOG
 
-    update-rc.d mysql defaults > /dev/null 2>&1
+    update-rc.d mysql defaults > /dev/null 2>&1  >> $LOG
     systemctl start mysql >> $LOG
-    check_result $? "mariadb start failed"
+    check_result $? "mariadb start failed"  >> $LOG
 
     # Securing MariaDB installation
-    mpass=$(gen_pass)
+    mpass=$(gen_pass)  >> $LOG
     mysqladmin -u root password $mpass >> $LOG
-    echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
-    chmod 600 /root/.my.cnf
+    echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf  >> $LOG
+    chmod 600 /root/.my.cnf  >> $LOG
 
     # Clear MariaDB Test Users and Databases
-    mysql -e "DELETE FROM mysql.user WHERE User=''"
-    mysql -e "DROP DATABASE test" > /dev/null 2>&1
-    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-    mysql -e "DELETE FROM mysql.user WHERE user='';"
-    mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"
+    mysql -e "DELETE FROM mysql.user WHERE User=''"  >> $LOG
+    mysql -e "DROP DATABASE test" > /dev/null 2>&1  >> $LOG
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"  >> $LOG
+    mysql -e "DELETE FROM mysql.user WHERE user='';"  >> $LOG
+    mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"  >> $LOG
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then
