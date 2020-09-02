@@ -1197,7 +1197,7 @@ if [ "$nginx" = 'yes' ]; then
     fi
 
     update-rc.d nginx defaults > /dev/null 2>&1
-    systemctl start nginx >> $LOG
+    /etc/init.d/nginx start >> $LOG
     check_result $? "nginx start failed"
 fi
 
