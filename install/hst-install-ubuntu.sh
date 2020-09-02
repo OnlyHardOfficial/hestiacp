@@ -284,7 +284,7 @@ echo
 
 # Update apt repository
 apt-get -qq update
-apt-get update && apt-get install -y --no-install-recommends apt-utils
+#apt-get update && apt-get install -y --no-install-recommends apt-utils
 clear
 
 # Creating backup directory
