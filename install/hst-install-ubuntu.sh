@@ -1285,11 +1285,11 @@ if [ "$multiphp" = 'yes' ] ; then
     done
 fi
 
-if [ "$phpfpm" = 'yes' ]; then
-    echo "[ * ] Configuring PHP-FPM..."
-    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
+if [ "$phpfpm" = 'yes' ]; then >> $LOG
+    echo "[ * ] Configuring PHP-FPM..." >> $LOG
+    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 >> $LOG
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf >> $LOG
+    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 >> $LOG
     systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
