@@ -602,23 +602,29 @@ BACK_PID=$!
 # Check if package installation is done, print a spinner
 spin_i=1
 while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-    printf ""
+    printf 
+    echo
     printf "\b${spinner:spin_i++%${#spinner}:1}"
-    sleep 0.5
+    echo
+    printf
+    sleep 0.5 >> $LOG
 done
 
 # Do a blank echo to get the \n back
-echo
+echo >> $LOG
 
 # Check Installation result
-wait $BACK_PID
-check_result $? 'apt-get upgrade failed'
+echo "[ * ] Check Installation result"
+wait $BACK_PID >> $LOG
+check_result $? 'apt-get upgrade failed' >> $LOG
 
 
 #----------------------------------------------------------#
 #                         Backup                           #
 #----------------------------------------------------------#
-
+echo "[ * ] Create a full backup of:"
+echo "--> nginx | apache2 | php | vsftpd | proftpd | bind  | clamd"
+echo "--> spamassassin | mysql | postgresql | hestia | exim4 | dovecot"
 # Creating backup directory tree
 mkdir -p $hst_backups
 cd $hst_backups
@@ -1208,7 +1214,10 @@ if [ "$nginx" = 'yes' ]; then >> $LOG
     fi >> $LOG
 
     update-rc.d nginx defaults > /dev/null 2>&1 >> $LOG
+    echo "[ * ] nginx start" >> $LOG
     /etc/init.d/nginx start >> $LOG
+    echo "[ * ] nginx status" >> $LOG
+    /etc/init.d/nginx status >> $LOG
     check_result $? "nginx start failed" >> $LOG
 fi
 
@@ -1291,20 +1300,24 @@ if [ "$phpfpm" = 'yes' ]; then >> $LOG
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 >> $LOG
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf >> $LOG
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 >> $LOG
+    echo "[ * ] php7.3-fpm stop" >> $LOG
+    service php7.3-fpm stop >> $LOG
+    echo "[ * ] php7.3-fpm start" >> $LOG
+    service php7.3-fpm start >> $LOG
     echo "[ * ] php7.3-fpm force-reload" >> $LOG
     service php7.3-fpm force-reload >> $LOG
     echo "[ * ] Check if php7.3-fpm statusis Running or NOT" >> $LOG
     service php7.3-fpm status >> $LOG
     check_result $? "php-fpm start failed" >> $LOG
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1 >> $LOG
-fi                                                                                                                              >> $LOG
-                                                                                                                                >> $LOG
-                                                                                                                                >> $LOG                                                                                                       
-#----------------------------------------------------------#                                                                    >> $LOG
+fi                                                                                                                              
+                                                                                                                                
+                                                                                                                                                                                                                                      
+#----------------------------------------------------------#  
 #                     Configure PHP                        #
 #----------------------------------------------------------#
-                                                                                                                                >> $LOG
-echo "[ * ] Configuring PHP..."                                                                                                 >> $LOG
+  
+echo "[ * ] Configuring PHP..."       
 ZONE=$(timedatectl > /dev/null 2>&1|grep Timezone|awk '{print $2}')
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
