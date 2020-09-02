@@ -399,7 +399,7 @@ install_welcome_message() {
 }
 
 # Printing nice ASCII logo
-clear
+#clear
 install_welcome_message
 
 # Web stack
@@ -1291,7 +1291,10 @@ if [ "$phpfpm" = 'yes' ]; then >> $LOG
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 >> $LOG
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf >> $LOG
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 >> $LOG
+    echo "[ * ] php7.3-fpm force-reload" >> $LOG
     service php7.3-fpm force-reload >> $LOG
+    echo "[ * ] Check if php7.3-fpm statusis Running or NOT" >> $LOG
+    service php7.3-fpm status >> $LOG
     check_result $? "php-fpm start failed" >> $LOG
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1 >> $LOG
 fi                                                                                                                              >> $LOG
@@ -1375,7 +1378,10 @@ if [ "$mysql" = 'yes' ]; then
     mysql_install_db >> $LOG
 
     update-rc.d mysql defaults > /dev/null 2>&1  >> $LOG
-    systemctl start mysql >> $LOG
+    echo "[ * ] Configuring service mysql restart"
+    service mysql restart >> $LOG
+    echo "[ * ] Check if mysql is runing or NOT"
+    service mysql status >> $LOG
     check_result $? "mariadb start failed"  >> $LOG
 
     # Securing MariaDB installation
