@@ -57,8 +57,8 @@ else
     type="NoSupport"
 fi
 
-runlsb_release() {
-    apt-get update && apt-get install -y lsb-release && apt-get clean all
+runlsb_release(){
+    sudo apt-get update && apt-get install -y lsb-release && apt-get clean all
 }
 
 no_support_message(){
