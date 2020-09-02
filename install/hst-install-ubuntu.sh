@@ -1180,35 +1180,35 @@ cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 #                     Configure Nginx                      #
 #----------------------------------------------------------#
 
-if [ "$nginx" = 'yes' ]; then
-    echo "[ * ] Configuring NGINX..."
-    rm -f /etc/nginx/conf.d/*.conf
-    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
-    cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
-    mkdir -p /etc/nginx/conf.d/domains
-    mkdir -p /etc/nginx/modules-enabled
-    mkdir -p /var/log/nginx/domains
+if [ "$nginx" = 'yes' ]; then >> $LOG
+    echo "[ * ] Configuring NGINX..." >> $LOG
+    rm -f /etc/nginx/conf.d/*.conf >> $LOG
+    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/ >> $LOG
+    cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/ >> $LOG
+    cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/ >> $LOG
+    cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/ >> $LOG
+    cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/ >> $LOG
+    mkdir -p /etc/nginx/conf.d/domains >> $LOG
+    mkdir -p /etc/nginx/modules-enabled >> $LOG
+    mkdir -p /var/log/nginx/domains >> $LOG
 
     # Update dns servers in nginx.conf
-    echo "[ * ] My internal IP dns_resolver"
-    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-    for ip in $dns_resolver; do
-        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            resolver="$ip $resolver"
-        fi
-    done
-    if [ ! -z "$resolver" ]; then
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
-        echo "[ * ] Setted Up internal dns_resolver"
-    fi
+    echo "[ * ] My internal IP dns_resolver" >> $LOG
+    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs) >> $LOG
+    for ip in $dns_resolver; do >> $LOG
+        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then >> $LOG
+            resolver="$ip $resolver" >> $LOG
+        fi >> $LOG
+    done >> $LOG
+    if [ ! -z "$resolver" ]; then >> $LOG
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf >> $LOG
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf >> $LOG
+        echo "[ * ] Setted Up internal dns_resolver" >> $LOG
+    fi >> $LOG
 
-    update-rc.d nginx defaults > /dev/null 2>&1
+    update-rc.d nginx defaults > /dev/null 2>&1 >> $LOG
     /etc/init.d/nginx start >> $LOG
-    check_result $? "nginx start failed"
+    check_result $? "nginx start failed" >> $LOG
 fi
 
 
@@ -1290,17 +1290,17 @@ if [ "$phpfpm" = 'yes' ]; then >> $LOG
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 >> $LOG
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf >> $LOG
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 >> $LOG
-    systemctl start php$fpm_v-fpm >> $LOG
-    check_result $? "php-fpm start failed"
-    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
-fi
-
-
-#----------------------------------------------------------#
+    service php7.3-fpm restart$fpm_v-fpm >> $LOG
+    check_result $? "php-fpm start failed" >> $LOG
+    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1 >> $LOG
+fi                                                                                                                              >> $LOG
+                                                                                                                                >> $LOG
+                                                                                                                                >> $LOG                                                                                                       
+#----------------------------------------------------------#                                                                    >> $LOG
 #                     Configure PHP                        #
 #----------------------------------------------------------#
-
-echo "[ * ] Configuring PHP..."
+                                                                                                                                >> $LOG
+echo "[ * ] Configuring PHP..."                                                                                                 >> $LOG
 ZONE=$(timedatectl > /dev/null 2>&1|grep Timezone|awk '{print $2}')
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
