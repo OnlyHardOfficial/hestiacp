@@ -357,7 +357,7 @@ fi
 
 # Validate whether installation script matches release version before continuing with install
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-    release_branch_ver=$(curl -s https://raw.githubusercontent.com/OnlyHardOfficial/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
+    release_branch_ver=$(curl -s https://raw.githubusercontent.com/OnlyHardOfficial/hestiacp/test_docker_ubuntu20.04/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
     if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
         echo
         echo -e "\e[91mInstallation aborted\e[0m"
