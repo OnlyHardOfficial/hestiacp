@@ -1185,6 +1185,7 @@ if [ "$nginx" = 'yes' ]; then
     mkdir -p /var/log/nginx/domains
 
     # Update dns servers in nginx.conf
+    echo "[ * ] My internal IP dns_resolver"
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
     for ip in $dns_resolver; do
         if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -1194,6 +1195,7 @@ if [ "$nginx" = 'yes' ]; then
     if [ ! -z "$resolver" ]; then
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+        echo "[ * ] Setted Up internal dns_resolver"
     fi
 
     update-rc.d nginx defaults > /dev/null 2>&1
