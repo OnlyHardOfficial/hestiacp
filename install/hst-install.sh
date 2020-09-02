@@ -44,8 +44,9 @@ if [ -e "/etc/os-release" ]; then
             release="$(lsb_release -s -r)"
             VERSION='ubuntu'            
         else
+            runlsb_release
             echo "lsb_release is currently not installed, please install it:"
-            echo "apt-get update && apt-get install lsb_release"
+            echo "apt-get update && apt-get install -y lsb-release && apt-get clean all"
             exit 1
         fi
     elif [ "$type" = "debian" ]; then
@@ -55,6 +56,10 @@ if [ -e "/etc/os-release" ]; then
 else
     type="NoSupport"
 fi
+
+runlsb_release() {
+    apt-get update && apt-get install -y lsb-release && apt-get clean all
+}
 
 no_support_message(){
     echo "****************************************************"
