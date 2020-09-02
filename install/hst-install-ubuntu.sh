@@ -898,9 +898,11 @@ if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
 fi
 
 # Restart SSH daemon
+echo "[ * ] systemctl restart ssh"
 systemctl restart ssh
 
 # Disable AWStats cron
+echo "[ * ] rm -f /etc/cron.d/awstats"
 rm -f /etc/cron.d/awstats
 
 # Set directory color
@@ -915,7 +917,9 @@ fi
 
 # Configuring NTP
 sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+echo "[ * ] systemctl enable systemd-timesyncd"
 systemctl enable systemd-timesyncd
+echo "[ * ] systemctl start systemd-timesyncd"
 systemctl start systemd-timesyncd
 
 # Setup rssh
