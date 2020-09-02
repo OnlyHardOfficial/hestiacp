@@ -602,6 +602,7 @@ BACK_PID=$!
 # Check if package installation is done, print a spinner
 spin_i=1
 while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+    printf ""
     printf "\b${spinner:spin_i++%${#spinner}:1}"
     sleep 0.5
 done
@@ -1290,7 +1291,7 @@ if [ "$phpfpm" = 'yes' ]; then >> $LOG
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 >> $LOG
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf >> $LOG
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 >> $LOG
-    service php7.3-fpm restart$fpm_v-fpm >> $LOG
+    service php7.3-fpm resforce-reload >> $LOG
     check_result $? "php-fpm start failed" >> $LOG
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1 >> $LOG
 fi                                                                                                                              >> $LOG
