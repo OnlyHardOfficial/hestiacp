@@ -108,4 +108,4 @@ else
     no_support_message
 fi
 
-exit
+#exit
