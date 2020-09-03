@@ -24,7 +24,7 @@ VERBOSE='yes'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.2.3'
-pma_v='8.0.21'
+pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
 mariadb_v="10.5"
@@ -1520,14 +1520,20 @@ if [ "$named" = 'yes' ]; then
     aa-complain /usr/sbin/named > /dev/null 2>&1
     echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
     if ! grep --quiet lxc /proc/1/environ; then
-        systemctl status apparmor > /dev/null 2>&1
+        service apparmor status > /dev/null 2>&1
         if [ $? -ne 0 ]; then
-            systemctl restart apparmor >> $LOG
+            service apparmor stop >> $LOG
+            service apparmor start >> $LOG
+            service apparmor restart >> $LOG
         fi
     fi
     if [ "$release" = '20.04' ]; then
         update-rc.d named defaults
-        systemctl start named
+        service named stop
+        service named start
+        service named restart
+        echo "[ * ] Configuring named STATUS"
+        service named status
     else
         update-rc.d bind9 defaults
         systemctl start bind9
