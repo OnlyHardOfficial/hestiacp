@@ -905,9 +905,18 @@ if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
 fi
 
 # Restart SSH daemon
-echo "[ * ] Restart SSH daemon"
-/etc/init.d/ssh status && sudo service ssh status && service ssh stop && service ssh restart
-echo "[ * ] systemctl restart ssh - incompatible"
+echo "[ * ] Restart SSH task"
+echo "[ * ] SSH status"
+/etc/init.d/ssh status >> $LOG
+echo "[ * ] SSH status again"
+service ssh status >> $LOG
+echo "[ * ] SSH STOP"
+service ssh stop >> $LOG
+echo "[ * ] SSH RESTART"
+service ssh restart >> $LOG
+echo "[ * ] SSH status final print if is OK or NOT"
+/etc/init.d/ssh status >> $LOG
+#echo "[ * ] systemctl restart ssh - incompatible"
 # systemctl restart ssh
 
 # Disable AWStats cron
@@ -928,9 +937,16 @@ fi
 sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
 echo "[ * ] systemctl enable systemd-timesyncd"
 systemctl enable systemd-timesyncd
-echo "[ * ] apt-get install ntp -y && sntp --version && sudo service ntp restart && sudo service ntp status"
-apt-get install ntp -y && sntp --version && sudo service ntp restart && sudo service ntp status
-echo "[ * ] "systemctl start systemd-timesyncd" - incompatible"
+echo "[ * ] apt-get install ntp"
+apt-get install ntp -y
+echo "[ * ] Print sntp --version "
+sntp --version 
+echo "[ * ] Print sntp --version "
+service ntp stop 
+service ntp start
+echo "[ * ] Print service ntp status"
+service ntp status
+#echo "[ * ] "systemctl start systemd-timesyncd" - incompatible"
 #systemctl start systemd-timesyncd
 
 # Setup rssh
@@ -1306,7 +1322,7 @@ if [ "$phpfpm" = 'yes' ]; then >> $LOG
     service php7.3-fpm start >> $LOG
     echo "[ * ] php7.3-fpm force-reload" >> $LOG
     service php7.3-fpm force-reload >> $LOG
-    echo "[ * ] Check if php7.3-fpm statusis Running or NOT" >> $LOG
+    echo "[ * ] Check if php7.3-fpm status is Running or NOT" >> $LOG
     service php7.3-fpm status >> $LOG
     check_result $? "php-fpm start failed" >> $LOG
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1 >> $LOG
