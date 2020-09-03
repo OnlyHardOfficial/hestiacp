@@ -24,10 +24,10 @@ VERBOSE='yes'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.2.3'
-pma_v='5.0.2'
+pma_v='8.0.21'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
-mariadb_v="10.4"
+mariadb_v="10.5"
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
@@ -602,7 +602,7 @@ BACK_PID=$!
 # Check if package installation is done, print a spinner
 spin_i=1
 while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-    printf 
+     
     echo
     printf "\b${spinner:spin_i++%${#spinner}:1}"
     echo
@@ -939,14 +939,15 @@ echo "[ * ] systemctl enable systemd-timesyncd"
 systemctl enable systemd-timesyncd
 echo "[ * ] apt-get install ntp"
 apt-get install ntp -y
-echo "[ * ] Print sntp --version "
+echo "[ * ] Print sntp --version"
 sntp --version 
-echo "[ * ] Print sntp --version "
+#echo "[ * ] service ntp stop"
 service ntp stop 
 service ntp start
+service ntp restart
 echo "[ * ] Print service ntp status"
 service ntp status
-#echo "[ * ] "systemctl start systemd-timesyncd" - incompatible"
+#echo "[ * ] "systemctl start systemd-timesyncd" - incompatible"   -->OnlyHardOfficial this command is ineficient
 #systemctl start systemd-timesyncd
 
 # Setup rssh
