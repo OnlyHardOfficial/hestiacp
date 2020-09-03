@@ -477,6 +477,7 @@ echo -e "\n"
 if [ "$interactive" = 'yes' ]; then
     read -p 'Would you like to continue with the installation? [Y/N]: ' answer
     if [ "$answer" != 'y' ] && [ "$answer" != 'Y'  ]; then
+        echo ''
         echo 'Goodbye'
         exit 1
     fi
@@ -1590,15 +1591,15 @@ if [ "$exim" = 'yes' ]; then
     echo "[ * ] Clean non-zero size paniclog"
     rm /var/log/exim4/paniclog >> $LOG
     echo "[ * ] service exim4 status"
-    service exim4 status #>> $LOG
+    service exim4 status
     echo "[ * ] service exim4 stop"
-    service exim4 stop #>> $LOG
+    service exim4 stop
     echo "[ * ] service exim4 start"
-    service exim4 start #>> $LOG
+    service exim4 start 
     echo "[ * ] service exim4 restart"
-    service exim4 restart #>> $LOG
+    service exim4 restart 
     echo "[ * ] service exim4 status"
-    service exim4 status #>> $LOG
+    service exim4 status 
     #echo "[ * ] Sytemctl start exim4 - incompatible"
     #systemctl start exim4 >> $LOG
     check_result $? "exim4 start failed"
