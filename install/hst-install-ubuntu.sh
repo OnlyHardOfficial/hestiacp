@@ -1307,20 +1307,20 @@ if [ "$multiphp" = 'yes' ] ; then
     done
 fi
 
-if [ "$phpfpm" = 'yes' ]; then >> $LOG
-    echo "[ * ] Configuring PHP-FPM..." >> $LOG
-    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 >> $LOG
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf >> $LOG
-    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 >> $LOG
-    echo "[ * ] php7.3-fpm stop" >> $LOG
-    service php7.3-fpm stop >> $LOG
-    echo "[ * ] php7.3-fpm start" >> $LOG
-    service php7.3-fpm start >> $LOG
-    echo "[ * ] php7.3-fpm force-reload" >> $LOG
-    service php7.3-fpm force-reload >> $LOG
-    echo "[ * ] Check if php7.3-fpm status is Running or NOT" >> $LOG
-    service php7.3-fpm status >> $LOG
-    check_result $? "php-fpm start failed" >> $LOG
+if [ "$phpfpm" = 'yes' ]; then
+    echo "[ * ] Configuring PHP-FPM..." 
+    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1 
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf 
+    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1 
+    echo "[ * ] php7.3-fpm stop" 
+    service php7.3-fpm stop 
+    echo "[ * ] php7.3-fpm start" 
+    service php7.3-fpm start 
+    echo "[ * ] php7.3-fpm force-reload" 
+    service php7.3-fpm force-reload
+    echo "[ * ] Check if php7.3-fpm status is Running or NOT" 
+    service php7.3-fpm status
+    check_result $? "php-fpm start failed" 
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1 >> $LOG
 fi                                                                                                                              
                                                                                                                                 
@@ -1781,6 +1781,8 @@ if [ "$fail2ban" = 'yes' ]; then
     sudo service fail2ban stop
     sudo service fail2ban start
     sudo service fail2ban restart
+    echo
+    echo
     #systemctl start fail2ban >> $LOG
     check_result $? "fail2ban start failed"
 fi
@@ -1841,6 +1843,9 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 local_ip=$ip
+
+echo
+echo
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
