@@ -1574,11 +1574,11 @@ if [ "$exim" = 'yes' ]; then
     update-rc.d -f sendmail remove > /dev/null 2>&1
     echo "[ * ] systemctl stop sendmail - incompatible"
     systemctl stop sendmail > /dev/null 2>&1
-    service sendmail stop
+    service sendmail stop #>> $LOG
     update-rc.d -f postfix remove > /dev/null 2>&1
     echo "[ * ] systemctl stop postfix - incompatible"
     systemctl stop postfix > /dev/null 2>&1
-    service postfix stop
+    service postfix stop #>> $LOG
 
     update-rc.d exim4 defaults
     ###############################################################################################
@@ -1590,17 +1590,17 @@ if [ "$exim" = 'yes' ]; then
     echo "[ * ] Clean non-zero size paniclog"
     rm /var/log/exim4/paniclog >> $LOG
     echo "[ * ] service exim4 status"
-    service exim4 status >> $LOG
+    service exim4 status #>> $LOG
     echo "[ * ] service exim4 stop"
-    service exim4 stop >> $LOG
+    service exim4 stop #>> $LOG
     echo "[ * ] service exim4 start"
-    service exim4 start >> $LOG
+    service exim4 start #>> $LOG
     echo "[ * ] service exim4 restart"
-    service exim4 restart >> $LOG
+    service exim4 restart #>> $LOG
     echo "[ * ] service exim4 status"
-    service exim4 status >> $LOG
-    echo "[ * ] ystemctl start exim4 - incompatible"
-    systemctl start exim4 >> $LOG
+    service exim4 status #>> $LOG
+    #echo "[ * ] Sytemctl start exim4 - incompatible"
+    #systemctl start exim4 >> $LOG
     check_result $? "exim4 start failed"
 fi
 
@@ -1619,7 +1619,13 @@ if [ "$dovecot" = 'yes' ]; then
     fi
     chown -R root:root /etc/dovecot*
     update-rc.d dovecot defaults
-    systemctl start dovecot >> $LOG
+    service dovecot status #>> $LOG
+    service dovecot stop #>> $LOG
+    service dovecot start #>> $LOG
+    service dovecot restart #>> $LOG
+    #systemctl start dovecot >> $LOG
+    echo "[ * ] Check service dovecot status"
+    service dovecot status
     check_result $? "dovecot start failed"
 fi
 
@@ -1642,7 +1648,12 @@ if [ "$clamd" = 'yes' ]; then
         sleep 0.5
     done
     echo
-    systemctl start clamav-daemon >> $LOG
+    freshclam
+    service clamav-daemon status
+    service clamav-daemon stop
+    service clamav-daemon start
+    service clamav-daemon force-reload
+    #systemctl start clamav-daemon >> $LOG  # -->dockerized Ubuntu20.04 systemctl doesn´t work 
     check_result $? "clamav-daemon start failed"
 fi
 
