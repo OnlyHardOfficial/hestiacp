@@ -1408,10 +1408,13 @@ if [ "$mysql" = 'yes' ]; then
     mysql_install_db >> $LOG
 
     update-rc.d mysql defaults > /dev/null 2>&1  >> $LOG
-    echo "[ * ] Configuring service mysql restart"
-    service mysql restart >> $LOG
-    echo "[ * ] Check if mysql is runing or NOT"
-    service mysql status >> $LOG
+    echo "[ * ] Initial Check if mysql is runing or NOT"
+    service mariadb status
+    service mariadb stop >> $LOG
+    service mariadb start >> $LOG
+    service mariadb restart >> $LOG
+    echo "[ * ] FINAL Check if mysql is runing or NOT"
+    service mariadb status >> $LOG
     check_result $? "mariadb start failed"  >> $LOG
 
     # Securing MariaDB installation
