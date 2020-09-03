@@ -1667,10 +1667,21 @@ if [ "$spamd" = 'yes' ]; then
     echo "[ * ] Configuring SpamAssassin..."
     update-rc.d spamassassin defaults > /dev/null 2>&1
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-    systemctl start spamassassin >> $LOG
+    apt-get install rsyslog -y
+    service rsyslog status 
+    service rsyslog stop
+    service rsyslog start
+    service rsyslog restart
+    service spamassassin status
+    service spamassassin stop
+    service spamassassin start
+    service spamassassin restart
+    service spamassassin status
+    #systemctl start spamassassin >> $LOG
     check_result $? "spamassassin start failed"
     unit_files="$(systemctl list-unit-files |grep spamassassin)"
     if [[ "$unit_files" =~ "disabled" ]]; then
+        
         systemctl enable spamassassin > /dev/null 2>&1
     fi
 fi
@@ -1727,10 +1738,10 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
 
     # Restart services
     if [ "$apache" = 'yes' ]; then
-        systemctl restart apache2 >> $LOG
+       service apache2 restart >> $LOG
     fi
     if [ "$nginx" = 'yes' ]; then
-        systemctl restart nginx >> $LOG
+        service nginx restart >> $LOG
     fi
 fi
 
@@ -1766,7 +1777,11 @@ if [ "$fail2ban" = 'yes' ]; then
     fi
 
     update-rc.d fail2ban defaults
-    systemctl start fail2ban >> $LOG
+    service fail2ban status
+    sudo service fail2ban stop
+    sudo service fail2ban start
+    sudo service fail2ban restart
+    #systemctl start fail2ban >> $LOG
     check_result $? "fail2ban start failed"
 fi
 
@@ -1871,7 +1886,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "</IfModule>" >> remoteip.conf
     sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
     a2enmod remoteip >> $LOG
-    systemctl restart apache2
+    service apache2 restart
 fi
 
 # Configuring MariaDB host
@@ -1937,7 +1952,10 @@ echo
 
 # Starting Hestia service
 update-rc.d hestia defaults
-systemctl start hestia
+service hestia status
+service hestia stop
+service hestia start
+service hestia restart
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
@@ -1982,9 +2000,11 @@ Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
 E-mail:  info@hestiacp.com
-Web:     https://www.hestiacp.com/
-Forum:   https://forum.hestiacp.com/
-GitHub:  https://www.github.com/hestiacp/hestiacp
+Web:            https://www.hestiacp.com/
+Documentation:  https://docs.hestiacp.com/
+Forum:          https://forum.hestiacp.com/
+GitHub:         https://www.github.com/hestiacp/hestiacp
+Discord:        https://discord.com/invite/nXRUZch
 
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
