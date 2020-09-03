@@ -1404,12 +1404,15 @@ if [ "$mysql" = 'yes' ]; then
     update-rc.d mysql defaults > /dev/null 2>&1  >> $LOG
     echo "[ * ] Initial Check if mysql is runing or NOT"
     service mariadb status
-    service mariadb stop >> $LOG
-    service mariadb start >> $LOG
-    service mariadb restart >> $LOG
+    echo "[ * ] service mariadb stop"
+    service mariadb stop
+    echo "[ * ] service mariadb start"
+    service mariadb start 
+    echo "[ * ] service mariadb restart"
+    service mariadb restart
     echo "[ * ] FINAL Check if mysql is runing or NOT"
-    service mariadb status >> $LOG
-    check_result $? "mariadb start failed"  >> $LOG
+    service mariadb status
+    check_result $? "mariadb start failed" 
 
     # Securing MariaDB installation
     mpass=$(gen_pass)  >> $LOG
