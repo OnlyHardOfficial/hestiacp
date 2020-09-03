@@ -1526,6 +1526,7 @@ if [ "$named" = 'yes' ]; then
     fi
     if [ "$release" = '20.04' ]; then
         update-rc.d named defaults
+        echo "[ * ] Configuring named STATUS"
         service named stop
         service named start
         service named restart
@@ -1533,6 +1534,7 @@ if [ "$named" = 'yes' ]; then
         service named status
     else
         update-rc.d bind9 defaults
+        echo "[ * ] Configuring named STATUS"
         systemctl start bind9
     fi
     check_result $? "bind9 start failed"
@@ -1570,11 +1572,34 @@ if [ "$exim" = 'yes' ]; then
     rm -f /etc/alternatives/mta
     ln -s /usr/sbin/exim4 /etc/alternatives/mta
     update-rc.d -f sendmail remove > /dev/null 2>&1
+    echo "[ * ] systemctl stop sendmail - incompatible"
     systemctl stop sendmail > /dev/null 2>&1
+    service sendmail stop
     update-rc.d -f postfix remove > /dev/null 2>&1
+    echo "[ * ] systemctl stop postfix - incompatible"
     systemctl stop postfix > /dev/null 2>&1
+    service postfix stop
 
     update-rc.d exim4 defaults
+    ###############################################################################################
+    # ------------------ * Stopping MTA for restart                                                                                                                                                [ OK ] 
+    #* Restarting MTA                                                                                                                                                          [ OK ] 
+    #ALERT: exim paniclog /var/log/exim4/paniclog has non-zero size, mail system possibly broken
+    # run "rm /var/log/exim4/paniclog"
+    ###############################################################################################
+    echo "[ * ] Clean non-zero size paniclog"
+    rm /var/log/exim4/paniclog >> $LOG
+    echo "[ * ] service exim4 status"
+    service exim4 status >> $LOG
+    echo "[ * ] service exim4 stop"
+    service exim4 stop >> $LOG
+    echo "[ * ] service exim4 start"
+    service exim4 start >> $LOG
+    echo "[ * ] service exim4 restart"
+    service exim4 restart >> $LOG
+    echo "[ * ] service exim4 status"
+    service exim4 status >> $LOG
+    echo "[ * ] ystemctl start exim4 - incompatible"
     systemctl start exim4 >> $LOG
     check_result $? "exim4 start failed"
 fi
