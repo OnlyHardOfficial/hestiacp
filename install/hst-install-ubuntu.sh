@@ -602,19 +602,14 @@ BACK_PID=$!
 # Check if package installation is done, print a spinner
 spin_i=1
 while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-     
-    echo
     printf "\b${spinner:spin_i++%${#spinner}:1}"
-    echo
-    printf
     sleep 0.5 >> $LOG
 done
 
 # Do a blank echo to get the \n back
-echo >> $LOG
+echo 
 
 # Check Installation result
-echo "[ * ] Check Installation result"
 wait $BACK_PID >> $LOG
 check_result $? 'apt-get upgrade failed' >> $LOG
 
@@ -622,10 +617,9 @@ check_result $? 'apt-get upgrade failed' >> $LOG
 #----------------------------------------------------------#
 #                         Backup                           #
 #----------------------------------------------------------#
-echo "[ * ] Create a full backup of:"
-echo "--> nginx | apache2 | php | vsftpd | proftpd | bind  | clamd"
-echo "--> spamassassin | mysql | postgresql | hestia | exim4 | dovecot"
+
 # Creating backup directory tree
+echo
 mkdir -p $hst_backups
 cd $hst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
