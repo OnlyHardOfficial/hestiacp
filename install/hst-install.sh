@@ -10,12 +10,14 @@
 #
 
 # Am I root?
+echo "[ * ] Hestia Control Panel"
 if [ "x$(id -u)" != 'x0' ]; then
     echo 'Error: this script can only be executed by root'
     exit 1
 fi
 
 # Check admin user account
+echo "[ * ] Hestia Control Panel"
 if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ -z "$1" ]; then
     echo "Error: user admin exists"
     echo
@@ -26,6 +28,7 @@ if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ -z "$1" ]; then
 fi
 
 # Check admin group
+echo "[ * ] Hestia Control Panel"
 if [ ! -z "$(grep ^admin: /etc/group)" ] && [ -z "$1" ]; then
     echo "Error: group admin exists"
     echo
@@ -36,6 +39,7 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ -z "$1" ]; then
 fi
 
 # Detect OS
+echo "[ * ] Hestia Control Panel"
 if [ -e "/etc/os-release" ]; then
     type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
     if [ "$type" = "ubuntu" ]; then
